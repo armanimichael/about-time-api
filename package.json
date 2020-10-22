@@ -1,0 +1,31 @@
+{
+  "name": "about-time-api",
+  "version": "1.0.0",
+  "description": "Restful API for 'About Time', a task managment app designed in Human-Computer Interaction Class",
+  "main": "server.ts",
+  "scripts": {
+    "start": "node ./build/server.js",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules server.ts",
+    "build": "tsc --project ./"
+  },
+  "keywords": [],
+  "author": "Michael Armani",
+  "license": "ISC",
+  "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "joi": "^17.2.1",
+    "mongoose": "^5.10.9",
+    "ts-node-dev": "^1.0.0-pre.64"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.8",
+    "@types/joi": "^14.3.4",
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "^14.11.8",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  }
+}
