@@ -40,15 +40,17 @@ router.post('/register', async (req, res) => {
     password: hashedPassword,
   });
 
-  try {
-    await userModel.save();
-    // * Response Success
-    res.status(200).json({ result: 'success' });
-  } catch (error) {
-    console.log(error);
-    // ! Response Error
-    res.status(400).json({ result: error });
-  }
+  await userModel
+    .save()
+    .then(() => {
+      // * Response Success
+      res.status(200).json({ result: 'success' });
+    })
+    .catch(error => {
+      // ! Response Error
+      console.log(error);
+      res.status(400).json({ result: error });
+    });
 });
 
 export default router;
