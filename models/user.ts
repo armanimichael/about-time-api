@@ -12,7 +12,8 @@ interface IUser extends Document {}
 
 export class User {
   public model: Model<IUser>;
-  private _validationSchema: Joi.ObjectSchema;
+  private _registerValidation: Joi.ObjectSchema;
+  private _loginValidation: Joi.ObjectSchema;
 
   constructor() {
     const schema = new Schema({
@@ -41,19 +42,34 @@ export class User {
     });
 
     this.model = model<IUser>('User', schema);
-    this._validationSchema = Joi.object({
+
+    // Validation
+    this._registerValidation = Joi.object({
       username: Joi.string().alphanum().min(8).max(16).required(),
       email: Joi.string().email().min(8).max(255).required(),
       password: Joi.string().min(8).max(255).required(),
       date: Joi.date(),
     });
+    this._loginValidation = Joi.object({
+      username: Joi.string().alphanum().min(8).max(16),
+      email: Joi.string().email().min(8).max(255),
+      password: Joi.string().min(8).max(255).required(),
+    }).xor('username', 'email');
   }
 
   createModel(attrs: IUserArgs) {
     return new this.model(attrs);
   }
 
-  validateModel(attrs: IUserArgs): Joi.ValidationError | undefined {
-    return this._validationSchema.validate(attrs).error;
+  validateModel(
+    attrs: IUserArgs,
+    method: 'register' | 'login' = 'register',
+  ): Joi.ValidationError | undefined {
+    switch (method) {
+      case 'register':
+        return this._registerValidation.validate(attrs).error;
+      case 'login':
+        return this._loginValidation.validate(attrs).error;
+    }
   }
 }
