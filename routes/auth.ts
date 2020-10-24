@@ -119,7 +119,7 @@ router.post('/login', async (req, res) => {
   );
 
   res.header('JWT-Auth-Token', token);
-  return res.status(200).json({ result: 'Login successful.' });
+  return res.status(200).json({ result: 'Login successful.', token: token });
 });
 
 export default router;
