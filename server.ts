@@ -1,8 +1,13 @@
 import express from 'express';
 import authRoutes from './routes/auth';
+import dotenv from 'dotenv';
 
+// Env Vars
+dotenv.config();
+
+// App
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 // Middlewares
 app.use(express.json());
