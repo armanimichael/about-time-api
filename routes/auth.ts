@@ -1,7 +1,13 @@
 import { Router } from 'express';
 import { Database } from '../controllers/Database';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
+// Env Vars
+dotenv.config();
+
+// Routes
 const router = Router();
 
 router.post('/register', async (req, res) => {
@@ -66,6 +72,7 @@ router.post('/login', async (req, res) => {
 
   // Check for Existing Mail or User
   interface UserQuery {
+    _id: string;
     password: string;
   }
 
@@ -79,16 +86,21 @@ router.post('/login', async (req, res) => {
     'password',
   )) as UserQuery | null;
 
-  const loginPassword = () => {
+  const userLoginData = (): UserQuery => {
+    const defaultData: UserQuery = {
+      _id: '',
+      password: '',
+    };
+
     if (username) {
-      return userByUsername?.password || '';
+      return userByUsername || defaultData;
     }
-    return userByMail?.password || '';
+    return userByMail || defaultData;
   };
 
   // Compare Passwords
   const isValidPassword = await bcrypt
-    .compare(password, loginPassword())
+    .compare(password, userLoginData().password)
     .catch(error => {
       return res.status(500).json({ result: error });
     });
@@ -100,7 +112,13 @@ router.post('/login', async (req, res) => {
     });
   }
 
-  // * Logged In
+  // * JWT and Login
+  const token = jwt.sign(
+    { _id: userLoginData()._id },
+    process.env.JWT_SECRET as string,
+  );
+
+  res.header('JWT-Auth-Token', token);
   return res.status(200).json({ result: 'Login successful.' });
 });
 
