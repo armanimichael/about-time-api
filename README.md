@@ -33,3 +33,6 @@ yarn dev
 ## This is not production ready
 
 This repository is not production ready. The entire project has testing purposes, for now.
+
+## License
+[MIT](LICENSE)
