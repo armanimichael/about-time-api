@@ -2,7 +2,6 @@ import { Schema, model, Document, Model, Types } from 'mongoose';
 import Joi from 'joi';
 
 interface IUserPreferencesValidationArgs {
-  username?: string;
   pushNotifications?: {
     system?: boolean;
     whatsapp?: boolean;
@@ -21,6 +20,7 @@ interface IUserPreferences extends Document {}
 export class UserPreferences {
   public model: Model<IUserPreferences>;
   private _preferencesValidation: Joi.ObjectSchema;
+  private _usernameValidation: Joi.ObjectSchema;
 
   constructor() {
     const schema = new Schema({
@@ -49,7 +49,6 @@ export class UserPreferences {
 
     // Validation
     this._preferencesValidation = Joi.object({
-      username: Joi.string().alphanum().min(8).max(6),
       pushNotifications: {
         system: Joi.bool(),
         whatsapp: Joi.bool(),
@@ -58,15 +57,21 @@ export class UserPreferences {
       },
       activitiesOverview: Joi.string().valid('daily', 'weekly'),
     });
+
+    this._usernameValidation = Joi.object({
+      username: Joi.string().alphanum().min(8).max(16).required(),
+    });
   }
 
   createModel(attrs: IUserPreferencesArgs) {
     return new this.model(attrs);
   }
 
-  validateModel(
-    attrs: IUserPreferencesValidationArgs,
-  ): Joi.ValidationError | undefined {
+  validateModel<T extends object>(attrs: T): Joi.ValidationError | undefined {
+    if (attrs.hasOwnProperty('username')) {
+      return this._usernameValidation.validate(attrs).error;
+    }
+
     return this._preferencesValidation.validate(attrs).error;
   }
 }

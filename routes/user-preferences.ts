@@ -1,26 +1,47 @@
 import { Router, Request } from 'express';
 import { Types } from 'mongoose';
 import { Database } from '../controllers/Database';
+import { getLoggedUserID } from '../utils/auth';
 
 // Routes
 const router = Router();
 
 // Update Username
-router.put('/username', (req, res) => {
-  // TODO: change username
+router.put('/username', async (req, res) => {
+  const { username } = req.body;
+
+  // Logged User ID
+  const id = getLoggedUserID(req);
+
+  // Username validation
+  const preferences = Database.documents.UserPreferences;
+  const user = Database.documents.User;
+  const validationError = preferences.validateModel({ username });
+
+  if (validationError) {
+    // ! Validation Error
+    return res.status(400).json({ result: validationError.details[0].message });
+  }
+
+  // Updating Username
+  // Checking if username already exists
+  const existingUsername = await user.model.findOne({ username });
+  if (existingUsername) {
+    // ! Username already exists
+    return res.status(409).json({ result: 'Username already exists.' });
+  }
+
+  // * Username updated
+  await user.model.findByIdAndUpdate(id, { username }, { omitUndefined: true });
+  return res.status(200).json({ result: 'Preferences updated.' });
 });
 
 // Set User Preferences
 router.post('/', async (req, res) => {
   const { pushNotifications, activitiesOverview } = req.body;
+
   // Logged User ID
-  interface SecureRouteRequest extends Request {
-    user: {
-      _id: Types.ObjectId;
-      iat: number;
-    };
-  }
-  const user_id = (req as SecureRouteRequest).user._id;
+  const user_id = getLoggedUserID(req);
 
   // Preferences Validation
   const preferences = Database.documents.UserPreferences;
