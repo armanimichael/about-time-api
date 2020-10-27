@@ -102,7 +102,7 @@ router.get('/', async (req, res) => {
     { user_id },
     'pushNotifications activitiesOverview',
   );
-  console.log(fetchPreferences);
+
   return res.status(200).json(fetchPreferences);
 });
 
