@@ -16,12 +16,12 @@ const PORT = process.env.PORT || 8000;
 // Middlewares
 app.use(express.json());
 app.use(authRoutes);
-app.use('/user/', jwtAuthentication, userPreferencesRoutes);
+app.use('/user/preferences', jwtAuthentication, userPreferencesRoutes);
 
 // Routes
 app.get('/', (req, res) => res.send('Absolutely nothing here'));
 
 // * Server Listening
 app.listen(PORT, () => {
-  console.log(`⚡️[About Time - Rest API]: Server running on port ${PORT}`);
+  console.log(`⚡️[About Time - Rest API]: Server running on PORT ${PORT}`);
 });
