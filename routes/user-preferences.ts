@@ -93,14 +93,6 @@ router.post('/', async (req, res) => {
     });
 });
 
-router.post('/push-notifications', (req, res) => {
-  // TODO: set push notifications
-});
-
-router.post('/activities-overview', (req, res) => {
-  // TODO: set activities overview
-});
-
 router.get('/', (req, res) => {
   // TODO: get user's preferences
   return res.status(200).json({ result: 'Wow, some data...' });
