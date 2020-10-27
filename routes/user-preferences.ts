@@ -102,12 +102,29 @@ router.get('/', async (req, res) => {
     { user_id },
     'pushNotifications activitiesOverview',
   );
-
+  console.log(fetchPreferences);
   return res.status(200).json(fetchPreferences);
 });
 
-router.get('/:preference', (req, res) => {
-  // TODO: get user's preference
+router.get('/:preference', async (req, res) => {
+  const { preference } = req.params;
+
+  // Logged User ID
+  const user_id = getLoggedUserID(req);
+
+  // Get preferences from DB
+  const preferences = Database.documents.UserPreferences;
+  const fetchPreferences = await preferences.model.findOne(
+    { user_id },
+    preference,
+  );
+
+  const preferenceValue = fetchPreferences?.get(preference);
+  if (!preferenceValue) {
+    return res.status(404).json({ result: "This preference doesn't exist." });
+  }
+
+  return res.status(200).json({ result: preferenceValue });
 });
 
 export default router;
