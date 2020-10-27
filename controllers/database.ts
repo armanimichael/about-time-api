@@ -1,12 +1,14 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { User } from './../models/user';
+import { UserPreferences } from './../models/user-preferences';
 
 // * ENV VARIABLES
 dotenv.config();
 
 interface IDocuments {
   User: User;
+  UserPreferences: UserPreferences;
 }
 
 export class Database {
@@ -26,6 +28,7 @@ export class Database {
 
     this._documents = {
       User: new User(),
+      UserPreferences: new UserPreferences(),
     };
   }
 
