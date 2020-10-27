@@ -1,5 +1,4 @@
 import { Router, Request } from 'express';
-import { Types } from 'mongoose';
 import { Database } from '../controllers/Database';
 import { getLoggedUserID } from '../utils/auth';
 
@@ -93,9 +92,18 @@ router.post('/', async (req, res) => {
     });
 });
 
-router.get('/', (req, res) => {
-  // TODO: get user's preferences
-  return res.status(200).json({ result: 'Wow, some data...' });
+router.get('/', async (req, res) => {
+  // Logged User ID
+  const user_id = getLoggedUserID(req);
+
+  // Get preferences from DB
+  const preferences = Database.documents.UserPreferences;
+  const fetchPreferences = await preferences.model.findOne(
+    { user_id },
+    'pushNotifications activitiesOverview',
+  );
+
+  return res.status(200).json(fetchPreferences);
 });
 
 router.get('/:preference', (req, res) => {
