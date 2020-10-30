@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
   // User Data Validation
-  const user = Database.documents.User;
+  const user = Database.collections.User;
   const validationError = user.validateModel({ username, email, password });
 
   if (validationError) {
@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
   const { username, email, password } = req.body;
 
   // User Data Validation
-  const user = Database.documents.User;
+  const user = Database.collections.User;
   const validationError = user.validateModel(
     { username, email, password },
     'login',

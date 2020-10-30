@@ -13,8 +13,8 @@ router.put('/username', async (req, res) => {
   const id = getLoggedUserID(req);
 
   // Username validation
-  const preferences = Database.documents.UserPreferences;
-  const user = Database.documents.User;
+  const preferences = Database.collections.UserPreferences;
+  const user = Database.collections.User;
   const validationError = preferences.validateModel({ username });
 
   if (validationError) {
@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
   const user_id = getLoggedUserID(req);
 
   // Preferences Validation
-  const preferences = Database.documents.UserPreferences;
+  const preferences = Database.collections.UserPreferences;
   const validationError = preferences.validateModel({
     pushNotifications,
     activitiesOverview,
@@ -97,7 +97,7 @@ router.get('/', async (req, res) => {
   const user_id = getLoggedUserID(req);
 
   // Get preferences from DB
-  const preferences = Database.documents.UserPreferences;
+  const preferences = Database.collections.UserPreferences;
   const fetchPreferences = await preferences.model.findOne(
     { user_id },
     'pushNotifications activitiesOverview',
@@ -113,7 +113,7 @@ router.get('/:preference', async (req, res) => {
   const user_id = getLoggedUserID(req);
 
   // Get preferences from DB
-  const preferences = Database.documents.UserPreferences;
+  const preferences = Database.collections.UserPreferences;
   const fetchPreferences = await preferences.model.findOne(
     { user_id },
     preference,
