@@ -29,14 +29,19 @@ export class User {
         min: 8,
         max: 255,
       },
+      isEmailVerified: {
+        type: Boolean,
+        default: false,
+      },
       password: {
         type: String,
         required: true,
         min: 8,
         max: 255,
       },
-      date: {
+      createdAt: {
         type: Date,
+        required: true,
         default: Date.now,
       },
     });
