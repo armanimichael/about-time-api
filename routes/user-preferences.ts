@@ -1,4 +1,4 @@
-import { Router, Request } from 'express';
+import { Router } from 'express';
 import { Database } from '../controllers/Database';
 import { getLoggedUserID } from '../utils/auth';
 

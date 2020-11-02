@@ -15,7 +15,7 @@ interface IUserPreferencesArgs extends IUserPreferencesValidationArgs {
   user_id?: Types.ObjectId;
 }
 
-interface IUserPreferences extends Document {}
+type IUserPreferences = Document;
 
 export class UserPreferences {
   public model: Model<IUserPreferences>;
@@ -63,12 +63,17 @@ export class UserPreferences {
     });
   }
 
-  createModel(attrs: IUserPreferencesArgs) {
+  createModel(attrs: IUserPreferencesArgs): IUserPreferences {
     return new this.model(attrs);
   }
 
-  validateModel<T extends object>(attrs: T): Joi.ValidationError | undefined {
-    if (attrs.hasOwnProperty('username')) {
+  validateModel<T>(attrs: T): Joi.ValidationError | undefined {
+    interface UserModel {
+      [index: string]: unknown;
+      username: string;
+    }
+
+    if (((attrs as unknown) as UserModel).username) {
       return this._usernameValidation.validate(attrs).error;
     }
 
