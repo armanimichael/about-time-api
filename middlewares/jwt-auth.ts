@@ -13,6 +13,7 @@ const jwtAuthentication = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET as string);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (req as any).user = verified;
     next();
   } catch (error) {

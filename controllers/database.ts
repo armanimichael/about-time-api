@@ -44,7 +44,7 @@ export class Database {
     console.log('DB Connected');
   }
 
-  private error(error: any) {
+  private error(error: unknown) {
     console.error(`DB Error: ${error}`);
   }
 }
