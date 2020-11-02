@@ -2,10 +2,6 @@ import { Router } from 'express';
 import { Database } from '../controllers/Database';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-// Env Vars
-dotenv.config();
 
 // Routes
 const router = Router();

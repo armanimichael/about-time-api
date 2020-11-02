@@ -1,10 +1,6 @@
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { User } from './../models/user';
 import { UserPreferences } from './../models/user-preferences';
-
-// * ENV VARIABLES
-dotenv.config();
 
 interface ICollection {
   User: User;
