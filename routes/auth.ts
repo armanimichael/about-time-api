@@ -1,11 +1,8 @@
 import { Router } from 'express';
-import { Database } from '../controllers/Database';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-// Env Vars
-dotenv.config();
+import { validateEmail } from '../utils/auth';
+import { Database } from '../controllers/Database';
 
 // Routes
 const router = Router();
@@ -14,7 +11,7 @@ router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
   // User Data Validation
-  const user = Database.documents.User;
+  const user = Database.collections.User;
   const validationError = user.validateModel({ username, email, password });
 
   if (validationError) {
@@ -34,6 +31,27 @@ router.post('/register', async (req, res) => {
   const doesUserExists = await user.model.findOne({ username });
   if (doesUserExists)
     return res.status(400).json({ result: 'Username already exists.' });
+
+  // Validate Email
+  if (!process.env.SKIP_EMAIL_VALIDATION) {
+    try {
+      const { smtpCheck, dnsCheck, disposableCheck } = await validateEmail(
+        email,
+      );
+
+      // ! Email Validation Error
+      if (
+        smtpCheck === 'false' ||
+        dnsCheck === 'false' ||
+        disposableCheck === 'true'
+      ) {
+        return res.status(400).json({ result: 'Email not valid.' });
+      }
+    } catch (error) {
+      // ! Verification API Error
+      return res.status(500).json({ result: 'Error validating the email.' });
+    }
+  }
 
   // User Creation or Errors
   const userModel = user.createModel({
@@ -59,7 +77,7 @@ router.post('/login', async (req, res) => {
   const { username, email, password } = req.body;
 
   // User Data Validation
-  const user = Database.documents.User;
+  const user = Database.collections.User;
   const validationError = user.validateModel(
     { username, email, password },
     'login',

@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 
-// Env Vars
-dotenv.config();
-
-const jwtAuthentication = (req: Request, res: Response, next: NextFunction) => {
+const jwtAuthentication = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Response | undefined => {
   const token = req.header('JWT-Auth-Token');
 
   if (!token)
@@ -13,6 +13,7 @@ const jwtAuthentication = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET as string);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (req as any).user = verified;
     next();
   } catch (error) {

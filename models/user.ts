@@ -8,7 +8,7 @@ interface IUserArgs {
   creation_date?: Date;
 }
 
-interface IUser extends Document {}
+type IUser = Document;
 
 export class User {
   public model: Model<IUser>;
@@ -29,14 +29,19 @@ export class User {
         min: 8,
         max: 255,
       },
+      isEmailVerified: {
+        type: Boolean,
+        default: false,
+      },
       password: {
         type: String,
         required: true,
         min: 8,
         max: 255,
       },
-      date: {
+      createdAt: {
         type: Date,
+        required: true,
         default: Date.now,
       },
     });
@@ -57,7 +62,7 @@ export class User {
     }).xor('username', 'email');
   }
 
-  createModel(attrs: IUserArgs) {
+  createModel(attrs: IUserArgs): IUser {
     return new this.model(attrs);
   }
 

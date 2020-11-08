@@ -9,6 +9,7 @@ The API uses ExpressJS and MongoDB, everything is written in TypeScript.
 
 - `DB_HOST`: MongoDB Host
 - `PORT`: Server Port
+- `EMAIL_VERIFICATION_KEY`: [Email Verification API](https://main.whoisxmlapi.com/) key
 
 ## Setup
 
@@ -35,4 +36,5 @@ yarn dev
 This repository is not production ready. The entire project has testing purposes, for now.
 
 ## License
+
 [MIT](LICENSE)
