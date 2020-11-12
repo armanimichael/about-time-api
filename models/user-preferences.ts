@@ -17,6 +17,7 @@ interface IUserPreferencesArgs extends IUserPreferencesValidationArgs {
 
 type IUserPreferences = Document;
 
+// TODO: Check if it makes sense to Denormalize Model
 export class UserPreferences {
   public model: Model<IUserPreferences>;
   private _preferencesValidation: Joi.ObjectSchema;
